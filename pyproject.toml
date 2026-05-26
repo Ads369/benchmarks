@@ -12,4 +12,5 @@ dependencies = [
     "pydantic>=2.12.5",
     "pyreqwest>=0.5.1",
     "ty>=0.0.5",
+    "zapros[pyreqwest]==0.10.0",
 ]

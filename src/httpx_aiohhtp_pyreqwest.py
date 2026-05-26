@@ -1,10 +1,13 @@
 import asyncio
 import time
 from contextlib import suppress
+from datetime import timedelta
 
 import aiohttp
 import httpx
 from pyreqwest.client import ClientBuilder
+from zapros import AsyncClient as ZaprosAsyncClient
+from zapros import AsyncPyreqwestHandler
 
 # --- ПАРАМЕТРЫ ТЕСТА ---
 CONCURRENCY = 200
@@ -30,9 +33,16 @@ async def fetch_aiohttp(client):
         await response.read()
 
 
+async def fetch_zapros(client):
+    """Задача для zapros"""
+    await client.get(TEST_URL)
+
+
 async def run_benchmark(name, fetch_func, ClientClass, builder=False):
     """Запускает бенчмарк для одного клиента"""
     total_time = 0
+    successful_requests = 0
+    failed_requests = 0
 
     # Создание клиента (Session/Builder)
     if builder:
@@ -41,6 +51,13 @@ async def run_benchmark(name, fetch_func, ClientClass, builder=False):
     elif ClientClass == aiohttp.ClientSession:
         # aiohttp Session
         client = ClientClass(timeout=aiohttp.ClientTimeout(total=30))
+    elif ClientClass == ZaprosAsyncClient:
+        # zapros поверх pyreqwest handler
+        client = ClientClass(
+            handler=AsyncPyreqwestHandler(
+                ClientBuilder().timeout(timedelta(seconds=30))
+            )
+        )
     else:
         # httpx AsyncClient
         client = ClientClass(timeout=30.0)
@@ -50,16 +67,21 @@ async def run_benchmark(name, fetch_func, ClientClass, builder=False):
             start_time = time.perf_counter()
             # Создание N асинхронных задач (Tasks)
             tasks = [fetch_func(client) for _ in range(CONCURRENCY)]
-            await asyncio.gather(*tasks)
+            results = await asyncio.gather(*tasks, return_exceptions=True)
             end_time = time.perf_counter()
             total_time += end_time - start_time
+            successful_requests += sum(
+                not isinstance(result, Exception) for result in results
+            )
+            failed_requests += sum(isinstance(result, Exception) for result in results)
 
         avg_time = total_time / ITERATIONS
-        rps = CONCURRENCY / avg_time
+        rps = (successful_requests / ITERATIONS) / avg_time
 
         print(f"--- {name} ---")
         print(f"Среднее время выполнения: {avg_time:.4f} с")
         print(f"Средний RPS (Запросов/с): {rps:.2f}")
+        print(f"Успешно/ошибок: {successful_requests}/{failed_requests}")
 
     finally:
         # Закрытие клиента/сессии
@@ -79,6 +101,9 @@ async def main():
 
     # 3. aiohttp
     await run_benchmark("aiohttp", fetch_aiohttp, aiohttp.ClientSession)
+
+    # 4. zapros
+    await run_benchmark("zapros", fetch_zapros, ZaprosAsyncClient)
 
 
 if __name__ == "__main__":

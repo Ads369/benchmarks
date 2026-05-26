@@ -133,6 +133,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pyreqwest" },
     { name = "ty" },
+    { name = "zapros", extra = ["pyreqwest"] },
 ]
 
 [package.metadata]
@@ -144,6 +145,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pyreqwest", specifier = ">=0.5.1" },
     { name = "ty", specifier = ">=0.0.5" },
+    { name = "zapros", extras = ["pyreqwest"], specifier = "==0.10.0" },
 ]
 
 [[package]]
@@ -597,6 +599,18 @@ wheels = [
 ]
 
 [[package]]
+name = "pywhatwgurl"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "idna" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c0/d2/ce0fffb9eb66ea2f88d20d7c3841b017d25559b6b617bce566811fe0bb48/pywhatwgurl-0.1.1.tar.gz", hash = "sha256:65c85da35367511c12a4dd87fecaf08aa3ae564259055b37b4ae53429289fcf6", size = 155366, upload-time = "2026-04-03T08:20:13.984Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/2f/6e14535f7532c836c1200ea53785570d3c37128719ff62915d0971e00598/pywhatwgurl-0.1.1-py3-none-any.whl", hash = "sha256:d67072d3f702f899e6e5de074e7fa14b5c9c5c85f616c6016c4eef9c94113d5f", size = 26605, upload-time = "2026-04-03T08:20:12.46Z" },
+]
+
+[[package]]
 name = "ty"
 version = "0.0.5"
 source = { registry = "https://pypi.org/simple" }
@@ -718,4 +732,23 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f9/86/0f0dccb6e59a9e7f122c5afd43568b1d31b8ab7dda5f1b01fb5c7025c9a9/yarl-1.22.0-cp314-cp314t-win_amd64.whl", hash = "sha256:9fb17ea16e972c63d25d4a97f016d235c78dd2344820eb35bc034bc32012ee27", size = 96292, upload-time = "2025-10-06T14:12:15.398Z" },
     { url = "https://files.pythonhosted.org/packages/48/b7/503c98092fb3b344a179579f55814b613c1fbb1c23b3ec14a7b008a66a6e/yarl-1.22.0-cp314-cp314t-win_arm64.whl", hash = "sha256:9f6d73c1436b934e3f01df1e1b21ff765cd1d28c77dfb9ace207f746d4610ee1", size = 85171, upload-time = "2025-10-06T14:12:16.935Z" },
     { url = "https://files.pythonhosted.org/packages/73/ae/b48f95715333080afb75a4504487cbe142cae1268afc482d06692d605ae6/yarl-1.22.0-py3-none-any.whl", hash = "sha256:1380560bdba02b6b6c90de54133c81c9f2a453dee9912fe58c1dcced1edb7cff", size = 46814, upload-time = "2025-10-06T14:12:53.872Z" },
+]
+
+[[package]]
+name = "zapros"
+version = "0.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "h11" },
+    { name = "pywhatwgurl" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ea/0b/27f80cfbf3bac768358398042596536ab2398181e8fd79c00477f913d9b6/zapros-0.10.0.tar.gz", hash = "sha256:1b41a8738ceb62a2e44f4d46cf63f5591c7a296fda14a454844b23558796ca1c", size = 80963, upload-time = "2026-04-27T15:47:37.219Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/e0/c9f7a9278b86d8903122ea317a4b29c0f8ca06c5c4c04489b2e2b5e1d0e0/zapros-0.10.0-py3-none-any.whl", hash = "sha256:24dd61488edacfa2ad830d3085dc2401849d5119b7d1fbc3d16a25b81ded5275", size = 72032, upload-time = "2026-04-27T15:47:35.529Z" },
+]
+
+[package.optional-dependencies]
+pyreqwest = [
+    { name = "pyreqwest" },
 ]
